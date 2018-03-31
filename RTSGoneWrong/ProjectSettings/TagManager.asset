@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Board
+  - team1Manager
+  - team2Manager
+  - team1
+  - team2
+  - navNode
   layers:
   - Default
   - TransparentFX
