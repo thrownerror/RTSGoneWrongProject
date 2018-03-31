@@ -1,8 +1,8 @@
-/[Ll]ibrary/
-/[Tt]emp/
-/[Oo]bj/
-/[Bb]uild/
-/[Bb]uilds/
+/Library/
+/Temp/
+/Obj/
+/Build/
+/Builds/
 /Assets/AssetStoreTools*
 
 # Visual Studio 2015 cache directory
@@ -32,3 +32,10 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+RTSGoneWRong/Assets/Library/metadata/00/
+
+RTSGoneWRong/Assets/Library/metadata/10/
+
+RTSGoneWRong/Assets/Library/
+
+RTSGoneWRong/Assets/Temp/
