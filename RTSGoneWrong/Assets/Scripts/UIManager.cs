@@ -16,6 +16,8 @@ public class UIManager : MonoBehaviour {
 	[SerializeField] private float cameraSpeed;
 
     private GameObject unit1;
+    //private GameObject Bases;
+    int selectedBaseIndex = 1;
     private GameObject selectedBase;
 
     // Use this for initialization
@@ -37,10 +39,10 @@ public class UIManager : MonoBehaviour {
 	{
 		currentSelectedUnit = buttonNum;
 
-        if (currentSelectedUnit == 2)
+        //if (currentSelectedUnit == 2)
         {
             unit1 = GameObject.Find("Tank");
-            selectedBase = GameObject.Find("Base");
+            selectedBase = GameObject.Find("Bases").transform.GetChild(selectedBaseIndex).gameObject;
             Instantiate(unit1, selectedBase.transform.position, Quaternion.identity);
         }
     }
