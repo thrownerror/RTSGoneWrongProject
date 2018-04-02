@@ -15,7 +15,7 @@ public class UIManager : MonoBehaviour {
 	[SerializeField] private Camera mainCamera;
 	[SerializeField] private float cameraSpeed;
 
-    private GameObject unit1;
+    [SerializeField] private GameObject unit2;
     //private GameObject Bases;
     int selectedBaseIndex = 1;
     private GameObject selectedBase;
@@ -29,7 +29,7 @@ public class UIManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update() 
 	{
-		//highlightPerimeter.GetComponent<RectTransform>().position = buttons[currentSelectedUnit - 1].GetComponent<RectTransform>().position;
+		
 		MoveCamera();
 
         
@@ -37,14 +37,21 @@ public class UIManager : MonoBehaviour {
 
 	public void PressButton(int buttonNum)
 	{
+		print(buttonNum);
 		currentSelectedUnit = buttonNum;
 
-        //if (currentSelectedUnit == 2)
+        if (currentSelectedUnit == 2)
         {
-            unit1 = GameObject.Find("Tank");
+            //unit2 = GameObject.Find("Tank");
             selectedBase = GameObject.Find("Bases").transform.GetChild(selectedBaseIndex).gameObject;
-            Instantiate(unit1, selectedBase.transform.position, Quaternion.identity);
+            Instantiate(unit2, selectedBase.transform.position, Quaternion.identity);
         }
+
+		highlightPerimeter.GetComponent<RectTransform>().position = buttons[currentSelectedUnit - 1].GetComponent<RectTransform>().position;
+		highlightPerimeter.GetComponent<RectTransform>().position += new Vector3(0.0f, 0.0f, -1.0f);
+        
+		GameObject myEventSystem = GameObject.Find("EventSystem");
+		myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem>().SetSelectedGameObject(null);
     }
 
 	private void MoveCamera()
