@@ -15,8 +15,11 @@ public class UIManager : MonoBehaviour {
 	[SerializeField] private Camera mainCamera;
 	[SerializeField] private float cameraSpeed;
 
-	// Use this for initialization
-	void Start() 
+    private GameObject unit1;
+    private GameObject selectedBase;
+
+    // Use this for initialization
+    void Start() 
 	{
 		currentSelectedUnit = 1;
 	}
@@ -24,14 +27,23 @@ public class UIManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update() 
 	{
-		highlightPerimeter.GetComponent<RectTransform>().position = buttons[currentSelectedUnit - 1].GetComponent<RectTransform>().position;
+		//highlightPerimeter.GetComponent<RectTransform>().position = buttons[currentSelectedUnit - 1].GetComponent<RectTransform>().position;
 		MoveCamera();
+
+        
 	}
 
 	public void PressButton(int buttonNum)
 	{
 		currentSelectedUnit = buttonNum;
-	}
+
+        if (currentSelectedUnit == 2)
+        {
+            unit1 = GameObject.Find("Tank");
+            selectedBase = GameObject.Find("Base");
+            Instantiate(unit1, selectedBase.transform.position, Quaternion.identity);
+        }
+    }
 
 	private void MoveCamera()
 	{
