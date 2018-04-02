@@ -12,6 +12,7 @@ TagManager:
   - navNode
   - Unit
   - EnemyBase
+  - PlayerBase
   layers:
   - Default
   - TransparentFX

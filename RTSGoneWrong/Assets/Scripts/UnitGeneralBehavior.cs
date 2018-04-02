@@ -5,6 +5,8 @@ using UnityEngine;
 public class UnitGeneralBehavior : MonoBehaviour {
 
 	//determines if this unit has the goal of going to the right
+    // Serialized for testing. Spawn should determine this
+    // if goesRight = true, it is player. else enemy AI
 	[SerializeField] private bool goesRight;
 	//a value ranging from 0 to 100
 	[SerializeField] private float obedience;
@@ -32,9 +34,11 @@ public class UnitGeneralBehavior : MonoBehaviour {
 	[SerializeField] private float seekEnemyBaseChance;
 	[SerializeField] private float standStillChance;
 	[SerializeField] private float goToClosestUnitChance;
+    [SerializeField] private bool isDead;
+    private Vector3 moveDirection;
 
-	private Vector3 moveDirection;
 	private bool isAttacking;
+    private GameObject attackingEnemy;
 
 	private bool isWandering;
 
@@ -46,9 +50,10 @@ public class UnitGeneralBehavior : MonoBehaviour {
 	// Use this for initialization
 	void Start() 
 	{
+        isDead = false;
 		timer = 0.0f;
-
-		goal = new Vector3(0.0f, 0.0f, 0.0f);
+        attackingEnemy = null;
+        goal = new Vector3(0.0f, 0.0f, 0.0f);
 
 		isWandering = false;
 
@@ -81,19 +86,30 @@ public class UnitGeneralBehavior : MonoBehaviour {
 	// Update is called once per frame
 	void Update() 
 	{
-		if (!isAttacking)
+        // To check if it goes back to normal working
+        if(isDead)
+        {
+            Destroy(gameObject);
+        }
+        if (isAttacking && attackingEnemy == null)
+        {
+            isAttacking = false;
+        }
+        if (!isAttacking)
 		{
 			MakeDecision();
-
-			Seek(goal);
+            CircleDetectionFOrAttack();
+            Seek(goal);
 
 			timer += Time.deltaTime;
 			splitTimer += Time.deltaTime;
 		} 
 		else
 		{
-			//TODO: attack logic
-		}
+            //TODO: attack logic
+            goal = attackingEnemy.transform.position;
+            Seek(goal);
+        }
 
 		if (isWandering)
 		{
@@ -190,7 +206,8 @@ public class UnitGeneralBehavior : MonoBehaviour {
 
 		Vector3 needsToMove = goal - transform.position;
 
-		if (transform.position.x <= goal.x + 0.01f && transform.position.x >=  goal.x - 0.01f && transform.position.y <= goal.y + 0.01f && transform.position.y >= goal.y - 0.01f )
+        //To avoid itersecting
+		if (transform.position.x <= goal.x + 1.0f && transform.position.x >=  goal.x - 1.0f && transform.position.y <= goal.y + 1.0f && transform.position.y >= goal.y - 1.0f )
 		{
 			return;
 		}
@@ -199,4 +216,46 @@ public class UnitGeneralBehavior : MonoBehaviour {
 
 		transform.position += Vector3.Normalize(moveDirection) * speed * Time.deltaTime;
 	}
+
+    //Checks in radius for enemies
+    void CircleDetectionFOrAttack()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, visionRadius);
+       
+        if (hitColliders.GetLength(0) > 0)
+        {
+            List<Collider> enemyColliders = new List<Collider>();
+            UnitGeneralBehavior unit = null;
+            for (int i = 0; i < hitColliders.GetLength(0); i++)
+            {
+                unit = hitColliders[i].GetComponent(typeof(UnitGeneralBehavior)) as UnitGeneralBehavior;
+                if (unit != null && unit.GetDirection() != goesRight)
+                {
+                    enemyColliders.Add(hitColliders[i]);
+                }
+            }
+            if (enemyColliders.Count > 0)
+            {
+                float distance = 1000.0f;
+                GameObject closestUnit = null;
+                foreach (var collider in enemyColliders)
+                {
+                    if (Vector3.Distance(collider.transform.position, transform.position) < distance)
+                    {
+                        distance = Vector3.Distance(collider.transform.position, transform.position);
+                        closestUnit = collider.gameObject;
+                    }
+                    isAttacking = true;
+                }
+                attackingEnemy = closestUnit;
+                print("Attack!");
+            }
+        }
+    }
+
+    //To get to know if the unit is an enemy
+    public bool GetDirection()
+    {
+        return goesRight;
+    }
 }
