@@ -15,34 +15,56 @@ public class UIManager : MonoBehaviour {
 	[SerializeField] private Camera mainCamera;
 	[SerializeField] private float cameraSpeed;
 
-    [SerializeField] private GameObject unit2;
-    //private GameObject Bases;
-    int selectedBaseIndex = 1;
+    private GameObject unit1;
+    private GameObject unit2;
+
+    // Selecting Base
+    public int selectedBaseIndex = 1;
     private GameObject selectedBase;
 
+
+    // Number of Bases
+    public int numBases = 3;
+
+
+
     // Use this for initialization
-    void Start() 
-	{
-		currentSelectedUnit = 1;
-	}
-	
-	// Update is called once per frame
-	void Update() 
-	{
-		
-		MoveCamera();
+    void Start()
+    {
+        currentSelectedUnit = 1;
+    }
 
-        
-	}
+    // Update is called once per frame
+    void Update()
+    {
 
-	public void PressButton(int buttonNum)
+        MoveCamera();
+
+
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            selectedBaseIndex++;
+            GameObject selector = GameObject.Find("BaseSelector");
+            if (selectedBaseIndex > numBases)
+            {
+                selectedBaseIndex = 1;
+            }
+            selector.transform.position = new Vector3(selector.transform.position.x, GameObject.Find("Bases").transform.GetChild(selectedBaseIndex).position.y, selector.transform.position.z);
+        }
+
+
+
+    }
+
+    public void PressButton(int buttonNum)
 	{
 		print(buttonNum);
 		currentSelectedUnit = buttonNum;
 
-        if (currentSelectedUnit == 2)
+        //if (currentSelectedUnit == 2)
         {
-            //unit2 = GameObject.Find("Tank");
+            unit2 = GameObject.Find("Tank");
             selectedBase = GameObject.Find("Bases").transform.GetChild(selectedBaseIndex).gameObject;
             Instantiate(unit2, selectedBase.transform.position, Quaternion.identity);
         }
