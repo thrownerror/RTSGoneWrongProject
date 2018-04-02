@@ -24,10 +24,6 @@ public class UnitGeneralBehavior : MonoBehaviour {
 
 	private GameObject enemyBase;
 
-	private List<GameObject> otherUnits;
-
-
-
 	//the following are random actions the unit can do
 	[SerializeField] private float wanderChance;
 	[SerializeField] private float seekRandomSpotChance;
@@ -58,17 +54,17 @@ public class UnitGeneralBehavior : MonoBehaviour {
 		isWandering = false;
 
 		isAttacking = false;
-		otherUnits = new List<GameObject>();
+		//otherUnits = new List<GameObject>();
 	
-		GameObject[] allUnits = GameObject.FindGameObjectsWithTag("Unit");
+		//GameObject[] allUnits = GameObject.FindGameObjectsWithTag("Unit");
 
-		for (int i = 0; i < allUnits.GetLength(0); i++)
-		{
-			if (allUnits[i] != gameObject)
-			{
-				otherUnits.Add(allUnits[i]);
-			}
-		}
+		//for (int i = 0; i < allUnits.GetLength(0); i++)
+		//{
+		//	if (allUnits[i] != gameObject)
+		//	{
+		//		otherUnits.Add(allUnits[i]);
+		//	}
+		//}
 
 		if (goesRight)
 		{
@@ -98,7 +94,7 @@ public class UnitGeneralBehavior : MonoBehaviour {
         if (!isAttacking)
 		{
 			MakeDecision();
-            CircleDetectionFOrAttack();
+            CircleDetectionForAttack();
             Seek(goal);
 
 			timer += Time.deltaTime;
@@ -127,7 +123,7 @@ public class UnitGeneralBehavior : MonoBehaviour {
 
 			if (rand <= obedience)
 			{
-				//do what player wants
+                (gameObject.GetComponent(typeof(UnitScript)) as UnitScript).NormalBehavior();
 			} 
 			else
 			{
@@ -168,7 +164,19 @@ public class UnitGeneralBehavior : MonoBehaviour {
 					print("Closest Unit!!");
 					GameObject other = null;
 					float distance = 1000.0f;
-					foreach (GameObject unit in otherUnits)
+
+                    List<GameObject> otherUnits = new List<GameObject>();
+
+                    GameObject[] allUnits = GameObject.FindGameObjectsWithTag("Unit");
+
+                    for (int i = 0; i < allUnits.GetLength(0); i++)
+                    {
+                    	if (allUnits[i] != gameObject)
+                    	{
+                    		otherUnits.Add(allUnits[i]);
+                    	}
+                    }
+                    foreach (GameObject unit in otherUnits)
 					{
 						if (Vector3.Distance(unit.transform.position, transform.position) < distance)
 						{
@@ -209,6 +217,10 @@ public class UnitGeneralBehavior : MonoBehaviour {
         //To avoid itersecting
 		if (transform.position.x <= goal.x + 1.0f && transform.position.x >=  goal.x - 1.0f && transform.position.y <= goal.y + 1.0f && transform.position.y >= goal.y - 1.0f )
 		{
+            if (isAttacking)
+            {
+                InflictDamage();
+            }
 			return;
 		}
 
@@ -218,7 +230,7 @@ public class UnitGeneralBehavior : MonoBehaviour {
 	}
 
     //Checks in radius for enemies
-    void CircleDetectionFOrAttack()
+    void CircleDetectionForAttack()
     {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, visionRadius);
        
@@ -257,5 +269,10 @@ public class UnitGeneralBehavior : MonoBehaviour {
     public bool GetDirection()
     {
         return goesRight;
+    }
+
+    void InflictDamage()
+    {
+
     }
 }
