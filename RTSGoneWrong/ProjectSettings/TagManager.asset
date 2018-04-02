@@ -10,6 +10,8 @@ TagManager:
   - team1
   - team2
   - navNode
+  - Unit
+  - EnemyBase
   layers:
   - Default
   - TransparentFX
