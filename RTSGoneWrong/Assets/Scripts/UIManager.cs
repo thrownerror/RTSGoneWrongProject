@@ -52,7 +52,7 @@ public class UIManager : MonoBehaviour {
             {
                 selectedBaseIndex = 1;
             }
-            selector.transform.position = new Vector3(selector.transform.position.x, GameObject.Find("Bases").transform.GetChild(selectedBaseIndex).position.y, selector.transform.position.z);
+            selector.transform.position = new Vector3(selector.transform.position.x, GameObject.Find("AlliedBases").transform.GetChild(selectedBaseIndex).position.y - 1.5f, selector.transform.position.z);
         }
 
 
@@ -85,11 +85,13 @@ public class UIManager : MonoBehaviour {
 		{
 			createType = barbarian;
 		}
-		if (createType != null)
+		if (createType != null && ResourceDisplay.favour >= createType.GetComponent<UnitScript>().unitCost)
 		{
            createType.GetComponent<UnitGeneralBehavior>().goesRight = true;
            selectedBase = GameObject.Find("AlliedBases").transform.GetChild(selectedBaseIndex).gameObject;
            Instantiate(createType, selectedBase.transform.position, Quaternion.identity);
+
+			ResourceDisplay.favour -= createType.GetComponent<UnitScript>().unitCost;
 		}
 
 		highlightPerimeter.GetComponent<RectTransform>().position = buttons[currentSelectedUnit - 1].GetComponent<RectTransform>().position;

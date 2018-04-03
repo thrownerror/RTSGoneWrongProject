@@ -9,24 +9,36 @@ public class ResourceDisplay : MonoBehaviour {
     
     public Text resourcetext;
     private bool gameover = false;
-    private int favour = 100;
+    public static int favour = 100;
+	private float favourPerSecond = 4.0f;
+	private float timer;
     
     
 	void Start () {
-        StartCoroutine(slowtime());
+        //StartCoroutine(slowtime());
+
+		timer = 0.0f;
 
     }
 	
 	// Update is called once per frame
 	void Update () {
         Display();
+
+		if (timer > (1.0f / favourPerSecond))
+		{
+			favour += 1;
+			timer = 0.0f;
+		}
+
+		timer += Time.deltaTime;
 	}
 
     void Display()
     {
         
         Debug.Log("\nResource: " + favour);
-        resourcetext.text = "Resource: " + favour;
+		gameObject.GetComponent<Text>().text = "Resource: " + favour;
 
     }
     void Increase_favour()
