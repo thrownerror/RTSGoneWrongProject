@@ -38,7 +38,7 @@ public class ResourceDisplay : MonoBehaviour {
     {
         
         Debug.Log("\nResource: " + favour);
-		gameObject.GetComponent<Text>().text = "Resource: " + favour;
+		gameObject.GetComponent<Text>().text = "Desler Doubloons: " + favour;
 
     }
     void Increase_favour()

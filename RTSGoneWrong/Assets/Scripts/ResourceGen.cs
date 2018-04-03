@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/// <summary>
+/// This class is deprecated and not implemented
+/// </summary>
 public class ResourceGen : MonoBehaviour {
 
     // Use this for initialization

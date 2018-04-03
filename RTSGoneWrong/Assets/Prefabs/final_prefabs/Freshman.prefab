@@ -83,7 +83,7 @@ MonoBehaviour:
   unitHealth: 55
   unitAttack: 3
   unitSpeed: 5
-  unitCost: 2
+  unitCost: 7
   unitRange: 3
   isDamaged: 0
   unitMaxHealth: 0

@@ -83,7 +83,7 @@ MonoBehaviour:
   unitHealth: 70
   unitAttack: 6
   unitSpeed: 4
-  unitCost: 5
+  unitCost: 12
   unitRange: 2
   isDamaged: 0
   unitMaxHealth: 0
@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 003a52226e7922f4eae4f0573a97de09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  goesRight: 0
+  goesRight: 1
   obedience: 75
   visionRadius: 2.5
   speed: 4
