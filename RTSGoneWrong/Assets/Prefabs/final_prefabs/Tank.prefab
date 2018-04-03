@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 212410065363258012}
   - component: {fileID: 114301066318506296}
   - component: {fileID: 114466696795775438}
+  - component: {fileID: 61322619415525278}
   m_Layer: 0
   m_Name: Tank
   m_TagString: Untagged
@@ -42,6 +43,31 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &61322619415525278
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1714167255155766}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 10.24, y: 15.36}
+    newSize: {x: 3.11, y: 4.67}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 10.24, y: 15.36}
+  m_EdgeRadius: 0
 --- !u!114 &114301066318506296
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -59,6 +85,8 @@ MonoBehaviour:
   unitSpeed: 3
   unitCost: 6
   unitRange: 1.5
+  isDamaged: 0
+  unitMaxHealth: 0
 --- !u!114 &114466696795775438
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -73,7 +101,6 @@ MonoBehaviour:
   goesRight: 1
   obedience: 60
   visionRadius: 4
-  canSeeBehind: 0
   speed: 3
   speedPanic: 3
   wanderChance: 2
@@ -82,6 +109,7 @@ MonoBehaviour:
   standStillChance: 5
   goToClosestUnitChance: 2
   isDead: 0
+  attackSpeed: 0.6
   wanderTimesPerPeriod: 6
   timeTillChangeDecision: 5
 --- !u!212 &212410065363258012

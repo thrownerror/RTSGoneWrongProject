@@ -13,8 +13,6 @@ public class UnitGeneralBehavior : MonoBehaviour {
 
     //the radius of how far away this unit can see
     [SerializeField] private float visionRadius;
-    //if this is true, vision is a circle, not a semicircle
-    [SerializeField] private bool canSeeBehind;
 
     //how fast this unit will move
     [SerializeField] private float speed;
@@ -33,11 +31,12 @@ public class UnitGeneralBehavior : MonoBehaviour {
 	[SerializeField] private float standStillChance;
 	[SerializeField] private float goToClosestUnitChance;
     [SerializeField] private bool isDead;
+    [SerializeField] private float attackSpeed;
     private Vector3 moveDirection;
 
     private bool isAttacking;
     private GameObject attackingEnemy;
-
+    private float inflictDamageTimer;
     private bool isWandering;
 
     private float timer;
@@ -49,11 +48,11 @@ public class UnitGeneralBehavior : MonoBehaviour {
     void Start()
     {
         isDead = false;
-        timer = 0.0f;
+        timer = timeTillChangeDecision - 0.2f;
         attackingEnemy = null;
-        goal = new Vector3(0.0f, 0.0f, 0.0f);
-
-		myUnitScript = gameObject.GetComponent<UnitScript>();
+        goal = Vector3.zero;
+        inflictDamageTimer = 0.0f;
+        myUnitScript = gameObject.GetComponent<UnitScript>();
 
         isWandering = false;
 
@@ -75,18 +74,16 @@ public class UnitGeneralBehavior : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        // To check if it goes back to normal working
+        // To check if it goes back to normal working. For testing
         if (isDead)
         {
             Destroy(gameObject);
         }
-        if (isAttacking && attackingEnemy == null)
-        {
-            isAttacking = false;
-        }
+
         if (!isAttacking)
 		{
 			MakeDecision();
+
             CircleDetectionForAttack();
             Seek(goal);
 
@@ -95,9 +92,17 @@ public class UnitGeneralBehavior : MonoBehaviour {
         }
         else
         {
-            //TODO: attack logic
-            goal = attackingEnemy.transform.position;
-            Seek(goal);
+            if (attackingEnemy == null)
+            {
+                isAttacking = false;
+                inflictDamageTimer = 0.0f;
+            }
+            else
+            {
+                goal = attackingEnemy.transform.position;
+                Seek(goal);
+                inflictDamageTimer += Time.deltaTime;
+            }
         }
 
         if (isWandering)
@@ -114,10 +119,12 @@ public class UnitGeneralBehavior : MonoBehaviour {
         {
             float rand = Random.value * 100.0f;
 
-			//obey
-			if (rand <= obedience)
+			//obey, but only allied units
+			if (goesRight == true && rand <= obedience)
 			{
-				gameObject.GetComponent<UnitScript>().NormalBehavior();
+                print("Obey");
+				goal = gameObject.GetComponent<UnitScript>().NormalBehavior();
+                print(goal);
 			} 
 			//disobey
 			else
@@ -233,18 +240,30 @@ public class UnitGeneralBehavior : MonoBehaviour {
     //Checks in radius for enemies
     void CircleDetectionForAttack()
     {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, visionRadius);
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, visionRadius);
 
         if (hitColliders.GetLength(0) > 0)
         {
-            List<Collider> enemyColliders = new List<Collider>();
+            List<Collider2D> enemyColliders = new List<Collider2D>();
             UnitGeneralBehavior unit = null;
+            string toSeekBase = (goesRight ? "EnemyBase" : "PlayerBase");
             for (int i = 0; i < hitColliders.GetLength(0); i++)
             {
 				unit = hitColliders[i].GetComponent<UnitGeneralBehavior>();
-                if (unit != null && unit.GetDirection() != goesRight)
+                if (myUnitScript.thisUnitType != UnitScript.unitTypes.healer)
                 {
-                    enemyColliders.Add(hitColliders[i]);
+                    if ((unit != null && unit.GetDirection() != goesRight) || 
+                        (hitColliders[i].gameObject.CompareTag(toSeekBase)))
+                    {
+                        enemyColliders.Add(hitColliders[i]);
+                    }
+                }
+                else
+                {
+                    if (unit != null && unit.GetDirection() == goesRight)
+                    {
+                        enemyColliders.Add(hitColliders[i]);
+                    }
                 }
             }
             if (enemyColliders.Count > 0)
@@ -253,15 +272,22 @@ public class UnitGeneralBehavior : MonoBehaviour {
                 GameObject closestUnit = null;
                 foreach (var collider in enemyColliders)
                 {
-                    if (Vector3.Distance(collider.transform.position, transform.position) < distance)
+                    if (myUnitScript.thisUnitType == UnitScript.unitTypes.healer && !(collider.gameObject.GetComponent<UnitScript>().isDamaged))
+                    {
+                        continue;
+                    }
+                    if ((Vector3.Distance(collider.transform.position, transform.position) < distance))
                     {
                         distance = Vector3.Distance(collider.transform.position, transform.position);
                         closestUnit = collider.gameObject;
                     }
-                    isAttacking = true;
                 }
-                attackingEnemy = closestUnit;
-                print("Attack!");
+                if (closestUnit != null)
+                {
+                    isAttacking = true;
+                    attackingEnemy = closestUnit;
+                    print("Attack!");
+                }
             }
         }
     }
@@ -274,7 +300,22 @@ public class UnitGeneralBehavior : MonoBehaviour {
 
     void InflictDamage()
     {
-
+        if (inflictDamageTimer >= attackSpeed)
+        {
+            if (myUnitScript.thisUnitType != UnitScript.unitTypes.healer)
+            {
+                attackingEnemy.GetComponent<UnitScript>().unitHealth -= myUnitScript.unitAttack;
+            }
+            else
+            {
+                attackingEnemy.GetComponent<UnitScript>().unitHealth += myUnitScript.unitAttack;
+                if (attackingEnemy.GetComponent<UnitScript>().unitHealth >= attackingEnemy.GetComponent<UnitScript>().unitMaxHealth)
+                {
+                    attackingEnemy.GetComponent<UnitScript>().unitHealth = attackingEnemy.GetComponent<UnitScript>().unitMaxHealth;
+                }
+            }
+            inflictDamageTimer = 0.0f;
+        }
     }
 
     public void applyWind(Vector3 direction)

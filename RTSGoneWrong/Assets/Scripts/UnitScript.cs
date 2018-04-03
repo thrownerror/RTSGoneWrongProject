@@ -10,7 +10,8 @@ public class UnitScript : MonoBehaviour {
         healer,
         barbarian,
         sniper,
-        flagbearer
+        flagbearer,
+        homeBase
     }
 
     [SerializeField] public unitTypes thisUnitType;
@@ -19,36 +20,36 @@ public class UnitScript : MonoBehaviour {
 	[SerializeField] public float unitSpeed;
 	[SerializeField] public int unitCost;
 	[SerializeField] public float unitRange;
+    public bool isDamaged;
+
+    public int unitMaxHealth;
+
+    private Vector3 mouseRightClickPositionLatest;
 
 
     // Use this for initialization
     void Start() 
 	{
-        switch (thisUnitType)
-        {
-			
-        }
+        unitMaxHealth = unitHealth;
+        mouseRightClickPositionLatest = transform.position;
     }
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+        if (Input.GetMouseButtonDown(1))
+            mouseRightClickPositionLatest = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane));
 
-    public void NormalBehavior()
-    {
-        switch (thisUnitType)
+        if (unitHealth <=0 )
         {
-			case unitTypes.tank:
-				break;
-			case unitTypes.healer:
-				break;
-			case unitTypes.barbarian:
-				break;
-			case unitTypes.sniper:
-				break;
-			case unitTypes.flagbearer:
-				break;
+            Destroy(gameObject);
         }
+
+        isDamaged = (unitHealth < unitMaxHealth);
     }
+
+    public Vector3 NormalBehavior()
+    {
+        return mouseRightClickPositionLatest;
+    }
+
 }

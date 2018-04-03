@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 212004747162937376}
   - component: {fileID: 114079019967269670}
   - component: {fileID: 114935383609523744}
+  - component: {fileID: 61847899240673874}
   m_Layer: 0
   m_Name: Freshman
   m_TagString: Untagged
@@ -42,6 +43,31 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &61847899240673874
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1056918969961978}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 3.4, y: 4.02}
+    newSize: {x: 3.4, y: 4.02}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 3.4, y: 4.02}
+  m_EdgeRadius: 0
 --- !u!114 &114079019967269670
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -59,6 +85,8 @@ MonoBehaviour:
   unitSpeed: 5
   unitCost: 2
   unitRange: 3
+  isDamaged: 0
+  unitMaxHealth: 0
 --- !u!114 &114935383609523744
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -73,7 +101,6 @@ MonoBehaviour:
   goesRight: 1
   obedience: 30
   visionRadius: 4
-  canSeeBehind: 0
   speed: 5
   speedPanic: 5
   wanderChance: 9
@@ -82,6 +109,7 @@ MonoBehaviour:
   standStillChance: 6
   goToClosestUnitChance: 5
   isDead: 0
+  attackSpeed: 0.7
   wanderTimesPerPeriod: 16
   timeTillChangeDecision: 5
 --- !u!212 &212004747162937376

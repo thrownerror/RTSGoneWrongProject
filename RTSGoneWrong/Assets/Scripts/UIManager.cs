@@ -87,9 +87,9 @@ public class UIManager : MonoBehaviour {
 		}
 		if (createType != null)
 		{
-			createType.GetComponent<UnitGeneralBehavior>().goesRight = true;
-			selectedBase = GameObject.Find("Bases").transform.GetChild(selectedBaseIndex).gameObject;
-			Instantiate(createType, selectedBase.transform.position, Quaternion.identity);
+           createType.GetComponent<UnitGeneralBehavior>().goesRight = true;
+           selectedBase = GameObject.Find("AlliedBases").transform.GetChild(selectedBaseIndex).gameObject;
+           Instantiate(createType, selectedBase.transform.position, Quaternion.identity);
 		}
 
 		highlightPerimeter.GetComponent<RectTransform>().position = buttons[currentSelectedUnit - 1].GetComponent<RectTransform>().position;
