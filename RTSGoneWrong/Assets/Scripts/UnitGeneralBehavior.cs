@@ -148,7 +148,15 @@ public class UnitGeneralBehavior : MonoBehaviour {
 				//seek the enemy base
 				else if (anothaRand < wanderChance + seekRandomSpotChance + seekEnemyBaseChance)
 				{
-					print("Enemy Base!");
+                    if (goesRight)
+                    {
+                        enemyBase = GameObject.FindGameObjectWithTag("EnemyBase");
+                    }
+                    else
+                    {
+                        enemyBase = GameObject.FindGameObjectWithTag("PlayerBase");
+                    }
+                    print("Enemy Base!");
 					//TODO: find the enemy base
 					goal = enemyBase.transform.position;
 					isWandering = false;
