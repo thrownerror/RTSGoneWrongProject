@@ -15,9 +15,11 @@ public class UIManager : MonoBehaviour {
 	[SerializeField] private Camera mainCamera;
 	[SerializeField] private float cameraSpeed;
 
-    private GameObject unit1;
-    private GameObject unit2;
-
+	[SerializeField] private GameObject tank;
+	[SerializeField] private GameObject healer;
+	[SerializeField] private GameObject flagBearer;
+	[SerializeField] private GameObject sniper;
+	[SerializeField] private GameObject barbarian;
     // Selecting Base
     public int selectedBaseIndex = 1;
     private GameObject selectedBase;
@@ -62,12 +64,33 @@ public class UIManager : MonoBehaviour {
 		print(buttonNum);
 		currentSelectedUnit = buttonNum;
 
-        //if (currentSelectedUnit == 2)
+		GameObject createType = null;
+		if (currentSelectedUnit == 1)
+		{
+			createType = tank;
+		}
+        else if (currentSelectedUnit == 2)
         {
-            unit2 = GameObject.Find("Tank");
-            selectedBase = GameObject.Find("Bases").transform.GetChild(selectedBaseIndex).gameObject;
-            Instantiate(unit2, selectedBase.transform.position, Quaternion.identity);
+			createType = healer;
         }
+		else if (currentSelectedUnit == 3)
+		{
+			createType = flagBearer;
+		}
+		else if (currentSelectedUnit == 4)
+		{
+			createType = sniper;
+		}
+		else if (currentSelectedUnit == 5)
+		{
+			createType = barbarian;
+		}
+		if (createType != null)
+		{
+			createType.GetComponent<UnitGeneralBehavior>().goesRight = true;
+			selectedBase = GameObject.Find("Bases").transform.GetChild(selectedBaseIndex).gameObject;
+			Instantiate(createType, selectedBase.transform.position, Quaternion.identity);
+		}
 
 		highlightPerimeter.GetComponent<RectTransform>().position = buttons[currentSelectedUnit - 1].GetComponent<RectTransform>().position;
 		highlightPerimeter.GetComponent<RectTransform>().position += new Vector3(0.0f, 0.0f, -1.0f);

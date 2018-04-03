@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UnitScript : MonoBehaviour {
 
-    enum unitTypes
+	public enum unitTypes
     {
         tank,
         healer,
@@ -13,19 +13,20 @@ public class UnitScript : MonoBehaviour {
         flagbearer
     }
 
-    private unitTypes thisUnitType;
-    private int unitHealth;
-    private int unitAttack;
-    private int unitSpeed;
-    private int unitCost;
-    private Texture2D unitSprite;
+    [SerializeField] public unitTypes thisUnitType;
+	[SerializeField] public int unitHealth;
+	[SerializeField] public int unitAttack;
+	[SerializeField] public float unitSpeed;
+	[SerializeField] public int unitCost;
+	[SerializeField] public float unitRange;
 
 
     // Use this for initialization
-    void Start () {
+    void Start() 
+	{
         switch (thisUnitType)
         {
-
+			
         }
     }
 	
@@ -38,7 +39,16 @@ public class UnitScript : MonoBehaviour {
     {
         switch (thisUnitType)
         {
-
+			case unitTypes.tank:
+				break;
+			case unitTypes.healer:
+				break;
+			case unitTypes.barbarian:
+				break;
+			case unitTypes.sniper:
+				break;
+			case unitTypes.flagbearer:
+				break;
         }
     }
 }

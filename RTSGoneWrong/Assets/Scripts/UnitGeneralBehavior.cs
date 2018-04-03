@@ -7,7 +7,7 @@ public class UnitGeneralBehavior : MonoBehaviour {
     //determines if this unit has the goal of going to the right
     // Serialized for testing. Spawn should determine this
     // if goesRight = true, it is player. else enemy AI
-    [SerializeField] private bool goesRight;
+    [SerializeField] public bool goesRight;
     //a value ranging from 0 to 100
     [SerializeField] private float obedience;
 
@@ -21,6 +21,8 @@ public class UnitGeneralBehavior : MonoBehaviour {
     //how fast this unit will move in a panic
     [SerializeField] private float speedPanic;
     private Vector3 goal;
+
+	private UnitScript myUnitScript;
 
     private GameObject enemyBase;
 
@@ -51,20 +53,11 @@ public class UnitGeneralBehavior : MonoBehaviour {
         attackingEnemy = null;
         goal = new Vector3(0.0f, 0.0f, 0.0f);
 
+		myUnitScript = gameObject.GetComponent<UnitScript>();
+
         isWandering = false;
 
 		isAttacking = false;
-		//otherUnits = new List<GameObject>();
-	
-		//GameObject[] allUnits = GameObject.FindGameObjectsWithTag("Unit");
-
-		//for (int i = 0; i < allUnits.GetLength(0); i++)
-		//{
-		//	if (allUnits[i] != gameObject)
-		//	{
-		//		otherUnits.Add(allUnits[i]);
-		//	}
-		//}
 
         if (goesRight)
         {
@@ -121,10 +114,12 @@ public class UnitGeneralBehavior : MonoBehaviour {
         {
             float rand = Random.value * 100.0f;
 
+			//obey
 			if (rand <= obedience)
 			{
-                (gameObject.GetComponent(typeof(UnitScript)) as UnitScript).NormalBehavior();
+				gameObject.GetComponent<UnitScript>().NormalBehavior();
 			} 
+			//disobey
 			else
 			{
 				//does whatever it wants
@@ -140,7 +135,7 @@ public class UnitGeneralBehavior : MonoBehaviour {
 				else if (anothaRand < wanderChance + seekRandomSpotChance)
 				{
 					print("Random Spot!");
-					goal = new Vector3(Random.value * 10.0f - 5.0f, Random.value * 10.0f - 5.0f, 0.0f);
+					goal = new Vector3(Random.value * 120.0f - 60.0f, Random.value * 34.0f - 17.0f, 0.0f);
 					isWandering = false;
 				} 
 				//seek the enemy base
@@ -214,8 +209,14 @@ public class UnitGeneralBehavior : MonoBehaviour {
 
         Vector3 needsToMove = goal - transform.position;
 
-        //To avoid itersecting
-		if (transform.position.x <= goal.x + 1.0f && transform.position.x >=  goal.x - 1.0f && transform.position.y <= goal.y + 1.0f && transform.position.y >= goal.y - 1.0f )
+        //To avoid intersecting
+		float rangeToMove = 0.5f;
+		if (isAttacking)
+		{
+			rangeToMove = myUnitScript.unitRange;
+		}
+		if ((transform.position.x <= goal.x + rangeToMove && transform.position.x >=  goal.x - rangeToMove) && 
+			(transform.position.y <= goal.y + rangeToMove && transform.position.y >= goal.y - rangeToMove ))
 		{
             if (isAttacking)
             {
@@ -240,7 +241,7 @@ public class UnitGeneralBehavior : MonoBehaviour {
             UnitGeneralBehavior unit = null;
             for (int i = 0; i < hitColliders.GetLength(0); i++)
             {
-                unit = hitColliders[i].GetComponent(typeof(UnitGeneralBehavior)) as UnitGeneralBehavior;
+				unit = hitColliders[i].GetComponent<UnitGeneralBehavior>();
                 if (unit != null && unit.GetDirection() != goesRight)
                 {
                     enemyColliders.Add(hitColliders[i]);

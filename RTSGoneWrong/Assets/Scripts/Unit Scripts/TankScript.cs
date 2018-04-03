@@ -6,7 +6,7 @@ public class TankScript : MonoBehaviour {
 
 
     public int Health = 150;
-    public int Attack = 2;
+    public int Attack = 4;
     public int Speed = 3;
     public int Cost = 2;
 
